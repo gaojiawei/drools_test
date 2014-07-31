@@ -7,8 +7,8 @@
         <artifactId>qunar-supom-generic</artifactId>
         <version>1.3.2</version>
     </parent>
-    <groupId>com.qunar.ucenter</groupId>
-    <artifactId>ucenter_hydra</artifactId>
+    <groupId>org.jiawei.gao</groupId>
+    <artifactId>drools_test</artifactId>
     <packaging>war</packaging>
 
     <dependencyManagement>
@@ -22,7 +22,7 @@
 
 
     <build>
-        <finalName>ucenter_hydra</finalName>
+        <finalName>drools_test</finalName>
         <plugins>
 
             <plugin>
