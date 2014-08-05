@@ -1,0 +1,13 @@
+package rules;
+
+rule "ucenter_b_ip_hour"
+    salience 9958
+    when
+    then
+end
+
+rule "ucenter_b_ip_hour_update"
+    salience 9959
+    when
+    then
+end
