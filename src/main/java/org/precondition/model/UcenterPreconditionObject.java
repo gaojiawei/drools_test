@@ -15,6 +15,19 @@ public class UcenterPreconditionObject {
 
     private UcenterPreconditionType type;
 
+    public UcenterPreconditionObject(){}
+
+    private UcenterPreconditionObject(Builder builder) {
+        setType(builder.type);
+        setEvent(builder.event);
+        setIp(builder.ip);
+        setUsername(builder.username);
+    }
+
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
     public String getUsername() {
         return username;
     }
@@ -45,5 +58,39 @@ public class UcenterPreconditionObject {
 
     public void setType(UcenterPreconditionType type) {
         this.type = type;
+    }
+
+    public static final class Builder {
+        private UcenterPreconditionType type;
+        private UcenterPreconditionEvent event;
+        private String ip;
+        private String username;
+
+        private Builder() {
+        }
+
+        public Builder type(UcenterPreconditionType type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder event(UcenterPreconditionEvent event) {
+            this.event = event;
+            return this;
+        }
+
+        public Builder ip(String ip) {
+            this.ip = ip;
+            return this;
+        }
+
+        public Builder username(String username) {
+            this.username = username;
+            return this;
+        }
+
+        public UcenterPreconditionObject build() {
+            return new UcenterPreconditionObject(this);
+        }
     }
 }

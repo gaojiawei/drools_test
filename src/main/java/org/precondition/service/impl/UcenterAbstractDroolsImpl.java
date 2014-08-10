@@ -6,6 +6,8 @@ import org.precondition.limit.Limiter;
 import org.precondition.model.UcenterPreconditionEvent;
 import org.drools.KnowledgeBase;
 import org.drools.runtime.StatelessKnowledgeSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -22,6 +24,8 @@ public abstract class UcenterAbstractDroolsImpl {
 
     private Limiter limiter;
 
+    Logger logger = LoggerFactory.getLogger("Drools");
+
     public StatelessKnowledgeSession getSessionByUcenterPreconditionType(UcenterPreconditionEvent type){
         KnowledgeBase knowledgeBase = ucenterPreconditionRoles.get(type);
         if (knowledgeBase==null){
@@ -37,7 +41,8 @@ public abstract class UcenterAbstractDroolsImpl {
     }
 
     private void initSession(StatelessKnowledgeSession session) {
-        session.setGlobal("limit",limiter);
+        session.setGlobal("limter",limiter);
+        session.setGlobal("logger",logger);
     }
 
 

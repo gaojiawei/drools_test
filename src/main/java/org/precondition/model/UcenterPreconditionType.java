@@ -7,7 +7,15 @@ package org.precondition.model;
  * qunar.com
  */
 public enum UcenterPreconditionType {
-    LOGIN,REGISTER,FIND_PASSWORD,SEND_MOBILE;
+    LOGIN("login"),REGISTER("register"),FIND_PASSWORD("find_password"),SEND_MOBILE("send_mobile");
 
+    UcenterPreconditionType(String name) {
+        this.name = name;
+    }
 
+    private String name;
+
+    @Override public String toString() {
+        return name;
+    }
 }

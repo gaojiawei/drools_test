@@ -1,13 +1,28 @@
 package rules;
 
+import org.precondition.model.wrapper.UcenterPreconditionObjectWrapper
+import org.precondition.limit.Limiter
+import java.sql.Wrapper
+import org.precondition.model.Result
+import java.util.concurrent.TimeUnit
+import org.slf4j.Logger
+
+
+global Limiter limter;
+global Logger logger;
+
 rule "ucenter_same_ip_one_hour"
     salience 9988
-    when
-    then
+    activation-group "ucenter_same_ip_one_hour"
+    when $wrapper:UcenterPreconditionObjectWrapper(validateResult.level<1 , limter.currentValue(ip+"_one_hour_"+type) >= limter.currentLimit("one_hour_"+type))
+    then  $wrapper.setValidateResult(new Result(1));
+                logger.info("valid fail ucenter_same_ip_one_hour  result={}",$wrapper);
+                update($wrapper);
 end
 
 rule "ucenter_same_ip_one_hour_update"
     salience 9989
-    when
-    then
+    activation-group "ucenter_same_ip_one_hour"
+    when $wrapper:UcenterPreconditionObjectWrapper( postProcess==true)
+    then limter.incrementCurrentValue($wrapper.getIp()+"_one_hour_"+$wrapper.getType(),TimeUnit.HOURS.toSeconds(1));
 end

@@ -1,11 +1,15 @@
 package org.precondition.limit.impl;
 
+import com.google.common.io.Resources;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.precondition.limit.Limiter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
+
+import java.io.IOException;
+import java.util.Properties;
 
 /**
  * .
@@ -17,8 +21,16 @@ public class CommonLimit implements Limiter{
     Logger logger = LoggerFactory.getLogger(CommonLimit.class);
     private Jedis jedis;
 
-    public  CommonLimit(){
+    private Properties properties ;
+
+    public  CommonLimit() {
         jedis = new Jedis("127.0.0.1",6379);
+        properties = new Properties();
+        try {
+            properties.load(Resources.asByteSource(Resources.getResource("limit.properties")).openStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override public Integer currentValue(String key) {
@@ -35,8 +47,7 @@ public class CommonLimit implements Limiter{
     }
 
     @Override public Integer currentLimit(String key) {
-        logger.info("redis get key={}",key);
-        String value = jedis.get(key);
-        return StringUtils.isNotBlank(value)? NumberUtils.toInt(value) : 0;
+        logger.info("limit key={}",key);
+        return NumberUtils.toInt(properties.getProperty("ten_minute_login"));
     }
 }

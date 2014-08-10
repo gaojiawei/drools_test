@@ -19,15 +19,21 @@ public class UcenterPreconditionServiceImpl extends UcenterAbstractDroolsImpl im
         StatelessKnowledgeSession session = this
                 .getSessionByUcenterPreconditionType(riskObject.getEvent());
         UcenterPreconditionObjectWrapper wrapper = new UcenterPreconditionObjectWrapper(riskObject);
+        wrapper.setValidateResult(new Result(0));
         session.execute(wrapper);
-        return wrapper.getResult()==null? new Result(0) : wrapper.getResult();
+        return wrapper.getValidateResult();
     }
 
     @Override public void postProcess(UcenterPreconditionObject riskObject) {
         KnowledgeBase knowledgeBase = getUcenterPreconditionRoles().get(riskObject.getEvent());
         StatefulKnowledgeSession session = knowledgeBase.newStatefulKnowledgeSession();
-        session.setGlobal("limit", getLimiter());
-        session.insert(riskObject);
+        session.setGlobal("limter", getLimiter());
+        session.setGlobal("logger",logger);
+        UcenterPreconditionObjectWrapper wrapper = new UcenterPreconditionObjectWrapper(riskObject,true);
+        wrapper.setValidateResult(new Result(0));
+        session.insert(wrapper);
+        session.fireAllRules();
+        session.dispose();
     }
 
 }

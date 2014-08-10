@@ -1,13 +1,32 @@
 package rules;
 
+import org.precondition.model.wrapper.UcenterPreconditionObjectWrapper
+import org.precondition.limit.Limiter
+import java.sql.Wrapper
+import org.precondition.model.Result
+import java.util.concurrent.TimeUnit
+import org.slf4j.Logger
+
+
+global Limiter limter
+global Logger logger
+function String getIPV4SegmentForC(String ip){
+    String[] ipSegment = ip.split("\\.");
+    return ipSegment[0]+"."+ipSegment[1]+".*.*";
+}
+
 rule "ucenter_b_ip_hour"
     salience 9958
-    when
-    then
+    activation-group "ucenter_b_ip_hour"
+    when $wrapper:UcenterPreconditionObjectWrapper(validateResult.level<1 , limter.currentValue(getIPV4SegmentForC(ip)+"_b_ip_hour_"+type) >= limter.currentLimit("b_ip_hour_"+type))
+    then  $wrapper.setValidateResult(new Result(1));
+                logger.info("valid fail ucenter_b_ip_hour  result={}",$wrapper);
+                update($wrapper);
 end
 
 rule "ucenter_b_ip_hour_update"
     salience 9959
-    when
-    then
+    activation-group "ucenter_b_ip_hour"
+    when $wrapper:UcenterPreconditionObjectWrapper( postProcess==true)
+    then limter.incrementCurrentValue(getIPV4SegmentForC($wrapper.getIp())+"_b_ip_hour_"+$wrapper.getType(),TimeUnit.HOURS.toSeconds(1));
 end

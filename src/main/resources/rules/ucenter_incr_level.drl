@@ -1,0 +1,20 @@
+package rules;
+
+import org.precondition.model.wrapper.UcenterPreconditionObjectWrapper
+import org.precondition.limit.Limiter
+import java.sql.Wrapper
+import org.precondition.model.Result
+import java.util.concurrent.TimeUnit
+
+
+global Limiter limter
+
+rule "ucenter_same_ip_ten_minute"
+    salience 10000
+    when $wrapper:UcenterPreconditionObjectWrapper(validateResult.level>1 )
+    then  Integer value = limter.currentValue($wrapper.getIp()+"show"+$wrapper.getType());
+    $wrapper.setValidateResult(new Result(value%5+1));
+     limter.incrementCurrentValue($wrapper.getIp()+"show"+$wrapper.getType(),TimeUnit.MINUTES.toSeconds(10));
+     drools.halt();
+end
+

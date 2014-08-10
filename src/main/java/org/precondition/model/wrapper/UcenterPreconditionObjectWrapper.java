@@ -10,7 +10,7 @@ import org.precondition.model.UcenterPreconditionObject;
  * qunar.com
  */
 public class UcenterPreconditionObjectWrapper extends UcenterPreconditionObject {
-    private Result result ;
+    private Result validateResult;
 
     private boolean postProcess;
 
@@ -26,12 +26,12 @@ public class UcenterPreconditionObjectWrapper extends UcenterPreconditionObject 
         this.postProcess = postProcess;
     }
 
-    public Result getResult() {
-        return result;
+    public Result getValidateResult() {
+        return validateResult;
     }
 
-    public void setResult(Result result) {
-        this.result = result;
+    public void setValidateResult(Result validateResult) {
+        this.validateResult = validateResult;
     }
 
     public boolean isPostProcess() {
