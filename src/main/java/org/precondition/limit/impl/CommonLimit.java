@@ -1,5 +1,6 @@
 package org.precondition.limit.impl;
 
+import com.google.common.base.Preconditions;
 import com.google.common.io.Resources;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -40,6 +41,7 @@ public class CommonLimit implements Limiter{
     }
 
     @Override public void incrementCurrentValue(String key, long duringSecs) {
+        logger.info("redis incr key={}",key);
         Long value = jedis.incr(key);
         if (Long.valueOf(1).equals(value)){
             jedis.expire(key,(int)duringSecs);
@@ -48,6 +50,8 @@ public class CommonLimit implements Limiter{
 
     @Override public Integer currentLimit(String key) {
         logger.info("limit key={}",key);
-        return NumberUtils.toInt(properties.getProperty("ten_minute_login"));
+        String property = properties.getProperty(key);
+        Preconditions.checkArgument(property!=null,"limit key is null "+key );
+        return NumberUtils.toInt(property);
     }
 }

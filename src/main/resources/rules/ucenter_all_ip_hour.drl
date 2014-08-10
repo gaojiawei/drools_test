@@ -17,15 +17,15 @@ function String getIPV4SegmentForAll(String ip){
 rule "ucenter_all_ip_hour"
     salience 9948
     activation-group "ucenter_all_ip_hour"
-    when $wrapper:UcenterPreconditionObjectWrapper(validateResult.level<1 , limter.currentValue(getIPV4SegmentForAll(ip)+"_all_ip_hour"+type.toString().toString()) >= limter.currentLimit("all_ip_hour_"+type.toString().toString()))
+    when $wrapper:UcenterPreconditionObjectWrapper(validateResult.level<1 , limter.currentValue(getIPV4SegmentForAll(ip)+"_all_ip_hour_"+type.toString().toString()) >= limter.currentLimit("all_ip_hour_"+type.toString().toString()))
     then  $wrapper.setValidateResult(new Result(1));
                 logger.info("valid fail ucenter_all_ip_hour  result={}",$wrapper);
                 update($wrapper);
 end
 
-rule "ucenter_c_ip_hour_update"
+rule "ucenter_all_ip_hour_update"
     salience 9949
     activation-group "ucenter_all_ip_hour"
     when $wrapper:UcenterPreconditionObjectWrapper( postProcess==true)
-    then limter.incrementCurrentValue(getIPV4SegmentForAll($wrapper.getIp())+"_all_ip_hour"+$wrapper.getType(),TimeUnit.HOURS.toSeconds(1));
+    then limter.incrementCurrentValue(getIPV4SegmentForAll($wrapper.getIp())+"_all_ip_hour_"+$wrapper.getType(),TimeUnit.HOURS.toSeconds(1));
 end

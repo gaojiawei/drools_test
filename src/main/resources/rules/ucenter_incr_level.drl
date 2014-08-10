@@ -5,15 +5,17 @@ import org.precondition.limit.Limiter
 import java.sql.Wrapper
 import org.precondition.model.Result
 import java.util.concurrent.TimeUnit
-
+import org.slf4j.Logger
 
 global Limiter limter
+global Logger logger
 
 rule "ucenter_incr_level"
     salience 10000
-    when $wrapper:UcenterPreconditionObjectWrapper(validateResult.level>1 )
+    when $wrapper:UcenterPreconditionObjectWrapper(validateResult.level>0)
     then  Integer value = limter.currentValue($wrapper.getIp()+"show"+$wrapper.getType());
     $wrapper.setValidateResult(new Result(value%5+1));
+    logger.info("result value={}",value%5+1);
      limter.incrementCurrentValue($wrapper.getIp()+"show"+$wrapper.getType(),TimeUnit.MINUTES.toSeconds(10));
      drools.halt();
 end
