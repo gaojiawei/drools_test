@@ -1,0 +1,6 @@
+package rules;
+
+rule "ucenter_same_ip"
+    when
+    then
+end
