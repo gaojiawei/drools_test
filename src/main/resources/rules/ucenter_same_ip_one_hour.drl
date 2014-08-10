@@ -14,7 +14,7 @@ global Logger logger;
 rule "ucenter_same_ip_one_hour"
     salience 9988
     activation-group "ucenter_same_ip_one_hour"
-    when $wrapper:UcenterPreconditionObjectWrapper(validateResult.level<1 , limter.currentValue(ip+"_one_hour_"+type) >= limter.currentLimit("one_hour_"+type))
+    when $wrapper:UcenterPreconditionObjectWrapper(validateResult.level<1 , limter.currentValue(ip+"_one_hour_"+type.toString()) >= limter.currentLimit("one_hour_"+type.toString()))
     then  $wrapper.setValidateResult(new Result(1));
                 logger.info("valid fail ucenter_same_ip_one_hour  result={}",$wrapper);
                 update($wrapper);

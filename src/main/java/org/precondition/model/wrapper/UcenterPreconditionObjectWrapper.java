@@ -41,4 +41,11 @@ public class UcenterPreconditionObjectWrapper extends UcenterPreconditionObject 
     public void setPostProcess(boolean postProcess) {
         this.postProcess = postProcess;
     }
+
+    @Override public String toString() {
+        return "UcenterPreconditionObjectWrapper{" +
+                "validateResult=" + validateResult +
+                ", postProcess=" + postProcess +
+                "} " + super.toString();
+    }
 }

@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
 
 global Limiter limter
 
-rule "ucenter_same_ip_ten_minute"
+rule "ucenter_incr_level"
     salience 10000
     when $wrapper:UcenterPreconditionObjectWrapper(validateResult.level>1 )
     then  Integer value = limter.currentValue($wrapper.getIp()+"show"+$wrapper.getType());

@@ -1,7 +1,5 @@
 package org.precondition.service.impl;
 
-import org.drools.KnowledgeBase;
-import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.StatelessKnowledgeSession;
 import org.precondition.model.Result;
 import org.precondition.model.UcenterPreconditionObject;
@@ -25,15 +23,20 @@ public class UcenterPreconditionServiceImpl extends UcenterAbstractDroolsImpl im
     }
 
     @Override public void postProcess(UcenterPreconditionObject riskObject) {
-        KnowledgeBase knowledgeBase = getUcenterPreconditionRoles().get(riskObject.getEvent());
-        StatefulKnowledgeSession session = knowledgeBase.newStatefulKnowledgeSession();
-        session.setGlobal("limter", getLimiter());
-        session.setGlobal("logger",logger);
+        StatelessKnowledgeSession session = this
+                .getSessionByUcenterPreconditionType(riskObject.getEvent());
         UcenterPreconditionObjectWrapper wrapper = new UcenterPreconditionObjectWrapper(riskObject,true);
         wrapper.setValidateResult(new Result(0));
-        session.insert(wrapper);
-        session.fireAllRules();
-        session.dispose();
+        session.execute(wrapper);
+//        KnowledgeBase knowledgeBase = getUcenterPreconditionRoles().get(riskObject.getEvent());
+//        StatefulKnowledgeSession session = knowledgeBase.newStatefulKnowledgeSession();
+//        session.setGlobal("limter", getLimiter());
+//        session.setGlobal("logger",logger);
+//        UcenterPreconditionObjectWrapper wrapper = new UcenterPreconditionObjectWrapper(riskObject,true);
+//        wrapper.setValidateResult(new Result(0));
+//        session.insert(wrapper);
+//        session.fireAllRules();
+//        session.dispose();
     }
 
 }

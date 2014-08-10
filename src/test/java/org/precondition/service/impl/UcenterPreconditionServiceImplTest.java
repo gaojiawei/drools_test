@@ -54,7 +54,8 @@ public class UcenterPreconditionServiceImplTest {
                                     "ucenter_same_ip_twenty_four_hour.drl", "ucenter_c_ip_hour.drl",
                                     "ucenter_b_ip_hour.drl",
                                     "ucenter_all_ip_hour.drl", "ucenter_incr_level.drl");
-                    //                    List<String> allRules = Lists.newArrayList("ucenter_same_ip_ten_minute.drl");
+//                                        List<String> allRules = Lists.newArrayList("ucenter_same_ip_ten_minute.drl", "ucenter_same_ip_one_hour.drl","ucenter_same_ip_twenty_four_hour.drl", "ucenter_c_ip_hour.drl",
+//                                                                                    "ucenter_b_ip_hour.drl");
                     for (String allRule : allRules) {
                         knowledgeBuilder
                                 .add(ResourceFactory.newClassPathResource("rules/" + allRule), ResourceType.DRL);
@@ -82,10 +83,36 @@ public class UcenterPreconditionServiceImplTest {
                 .event(UcenterPreconditionEvent.SHOW_CAPTCHA)
                 .type(UcenterPreconditionType.LOGIN).build();
         Assert.assertThat(preconditionService.preProcess(testObject).getLevel(), IsEqual.equalTo(0));
+
         preconditionService.postProcess(testObject);
         preconditionService.postProcess(testObject);
         preconditionService.postProcess(testObject);
         Assert.assertThat(preconditionService.preProcess(testObject).getLevel(), IsEqual.equalTo(1));
+        for (int i = 0; i < 100; i++) {
+            preconditionService.postProcess(testObject);
+        }
+        UcenterPreconditionObject testObject2 = UcenterPreconditionObject.newBuilder().ip("192.168.1.2")
+                .event(UcenterPreconditionEvent.SHOW_CAPTCHA)
+                .type(UcenterPreconditionType.LOGIN).build();
+        Assert.assertThat(preconditionService.preProcess(testObject2).getLevel(), IsEqual.equalTo(1));
+                for (int i = 0; i < 200; i++) {
+                    preconditionService.postProcess(testObject);
+                }
+        UcenterPreconditionObject testObject3 = UcenterPreconditionObject.newBuilder().ip("192.168.2.2")
+                .event(UcenterPreconditionEvent.SHOW_CAPTCHA)
+                .type(UcenterPreconditionType.LOGIN).build();
+        Assert.assertThat(preconditionService.preProcess(testObject3).getLevel(), IsEqual.equalTo(1));
+        UcenterPreconditionObject testObject4 = UcenterPreconditionObject.newBuilder().ip("192.1.2.2")
+                .event(UcenterPreconditionEvent.SHOW_CAPTCHA)
+                .type(UcenterPreconditionType.LOGIN).build();
+        Assert.assertThat(preconditionService.preProcess(testObject4).getLevel(), IsEqual.equalTo(0));
+//
+//        long begin = System.currentTimeMillis();
+//        for (int i = 0; i < 100; i++) {
+//            preconditionService.postProcess(testObject);
+//        }
+//
+//        System.out.println((System.currentTimeMillis()-begin)/100);
     }
 
     public void testPostProcess() throws Exception {

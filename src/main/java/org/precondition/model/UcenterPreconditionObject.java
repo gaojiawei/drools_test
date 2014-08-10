@@ -93,4 +93,13 @@ public class UcenterPreconditionObject {
             return new UcenterPreconditionObject(this);
         }
     }
+
+    @Override public String toString() {
+        return "UcenterPreconditionObject{" +
+                "username='" + username + '\'' +
+                ", ip='" + ip + '\'' +
+                ", event=" + event +
+                ", type=" + type +
+                '}';
+    }
 }
